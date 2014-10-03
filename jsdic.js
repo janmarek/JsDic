@@ -104,7 +104,9 @@
 	// export
 	if (typeof window !== 'undefined') {
 		window.JsDic = JsDic;
-	} else if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+	}
+
+	if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 		module.exports = JsDic;
 	}
 })();
