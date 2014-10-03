@@ -1,0 +1,26 @@
+{
+  "name": "jsdic",
+  "version": "0.0.0",
+  "description": "Simple dependecy injection container for javascript inspired by AngularJS",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/janmarek/JsDic.git"
+  },
+  "keywords": [
+    "dependecy",
+    "injection",
+    "container"
+  ],
+  "author": "Jan Marek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/janmarek/JsDic/issues"
+  }
+}

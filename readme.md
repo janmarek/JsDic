@@ -20,6 +20,7 @@ function AjaxController(service, data) {
 	// ...
 }
 
+var JsDic = require('jsdic');
 var dic = new JsDic();
 dic
 	.value('ajaxUrl', '/some-ajax-action')
