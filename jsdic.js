@@ -12,12 +12,12 @@
 
 			for (var i = 0; i < history.length; i++) {
 				if (history[i] === name) {
-					history.unshift(name);
-					throw 'Circular dependency detected: ' + history.reverse().join(' <- ');
+					throw 'Circular dependency detected: ' +
+						[name].concat(history).reverse().join(' <- ');
 				}
 			}
 
-			history.unshift(name);
+			history = [name].concat(history);
 
 			if (typeof this.instances[name] !== 'undefined') {
 				return this.instances[name];

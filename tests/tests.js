@@ -147,6 +147,16 @@ describe('DIC', function () {
 		}, /Circular dependency detected: b <- c <- a <- b/);
 	});
 
+	it('can depend on one service multiple times', function () {
+		dic
+			.factory('a', function () {})
+			.factory('b', function (a) {})
+			.factory('c', function (b) {})
+			.factory('d', function (b, c) {});
+
+		dic.get('d');
+	});
+
 	it('validates input for factory', function () {
 		assert.throws(function () {
 			dic.factory('a', 1);
