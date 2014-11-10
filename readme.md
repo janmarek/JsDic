@@ -31,6 +31,15 @@ dic
 	});
 
 var ctrl = dic.get('ajaxController');
+
+// dependecies can be defined explicitly
+dic
+	.value('ajaxUrl', '/some-ajax-action')
+	.value('initialData', [1, 2, 3])
+	.service('ajaxService', ['ajaxUrl'], AjaxService)
+	.factory('ajaxController', ['ajaxService', 'initialData'], function (as, id) {
+		return new AjaxController(as, id);
+	});
 ```
 
 Sources

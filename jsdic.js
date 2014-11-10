@@ -28,15 +28,15 @@
 			}
 
 			if (typeof this.services[name] !== 'undefined') {
-				var constructor = this.services[name];
-				var args = this.getDependencies(constructor, history);
-				return this.instances[name] = this.instantiateService(constructor, args);
+				var definition = this.services[name];
+				var args = this.getDependencies(definition, history);
+				return this.instances[name] = this.instantiateService(definition.fnc, args);
 			}
 
 			if (typeof this.factories[name] !== 'undefined') {
-				var factory = this.factories[name];
-				var args = this.getDependencies(factory, history);
-				return this.instances[name] = factory.apply(null, args);
+				var definition = this.factories[name];
+				var args = this.getDependencies(definition, history);
+				return this.instances[name] = definition.fnc.apply(null, args);
 			}
 
 			throw history.join(' <- ') + ' is not registered in container';
@@ -69,10 +69,10 @@
 			return args;
 		},
 
-		getDependencies: function (fnc, history) {
+		getDependencies: function (definition, history) {
 			var self = this;
-			var arr = this.getArguments(fnc);
-			return arr.map(function (value) {
+			var names = definition.dependencies || this.getArguments(definition.fnc);
+			return names.map(function (value) {
 				return self.get(value, history);
 			});
 		},
@@ -82,21 +82,35 @@
 			return this;
 		},
 
-		factory: function (name, fnc) {
-			if (typeof fnc !== 'function') {
-				throw name + ' is not function';
+		factory: function (name, dependencies, fnc) {
+			if (typeof dependencies === 'function') {
+				fnc = dependencies;
+				dependencies = null;
+			} else if (dependencies.constructor !== Array) {
+				throw new Error(name + ': second argument should be an array of dependencies or factory function');
 			}
 
-			this.factories[name] = fnc;
+			if (typeof fnc !== 'function') {
+				throw new Error(name + ' is not a function');
+			}
+
+			this.factories[name] = {fnc: fnc, dependencies: dependencies};
 			return this;
 		},
 
-		service: function (name, cls) {
-			if (typeof cls !== 'function') {
-				throw name + ' is not function';
+		service: function (name, dependencies, cls) {
+			if (typeof dependencies === 'function') {
+				cls = dependencies;
+				dependencies = null;
+			} else if (dependencies.constructor !== Array) {
+				throw new Error(name + ': second argument should be an array of dependencies or class constructor');
 			}
 
-			this.services[name] = cls;
+			if (typeof cls !== 'function') {
+				throw new Error(name + ' is not a function');
+			}
+
+			this.services[name] = {fnc: cls, dependencies: dependencies};
 			return this;
 		}
 	};

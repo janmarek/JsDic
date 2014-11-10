@@ -78,6 +78,17 @@ describe('DIC', function () {
 		assert.equal(3, dic.get('factory'));
 	});
 
+	it('handles factories with defined dependencies', function () {
+		dic
+			.value('_a', 1)
+			.value('_b', 2)
+			.factory('factory', ['_a', '_b'], function (a, b) {
+				return a + b;
+			});
+
+		assert.equal(3, dic.get('factory'));
+	});
+
 	it('get returns always the same instance for factories', function () {
 		function Cls() {
 
@@ -103,6 +114,22 @@ describe('DIC', function () {
 			.value('a', 1)
 			.value('b', 2)
 			.service('cls', Cls);
+
+		var obj = dic.get('cls');
+		assert.equal(1, obj.a);
+		assert.equal(2, obj.b);
+	});
+
+	it('handles services with defined dependencies', function () {
+		function Cls(a, b) {
+			this.a = a;
+			this.b = b;
+		}
+
+		dic
+			.value('_a', 1)
+			.value('_b', 2)
+			.service('cls', ['_a', '_b'], Cls);
 
 		var obj = dic.get('cls');
 		assert.equal(1, obj.a);
@@ -160,12 +187,20 @@ describe('DIC', function () {
 	it('validates input for factory', function () {
 		assert.throws(function () {
 			dic.factory('a', 1);
-		}, /a is not function/);
+		}, /a: second argument should be an array of dependencies or factory function/);
+
+		assert.throws(function () {
+			dic.factory('a', ['deps'], 1);
+		}, /a is not a function/);
 	});
 
 	it('validates input for service', function () {
 		assert.throws(function () {
 			dic.service('a', 1);
-		}, /a is not function/);
+		}, /a: second argument should be an array of dependencies or class constructor/);
+
+		assert.throws(function () {
+			dic.service('a', ['deps'], 1);
+		}, /a is not a function/);
 	});
 });
