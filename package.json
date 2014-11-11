@@ -18,6 +18,12 @@
     "injection",
     "container"
   ],
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha tests/"
+  },
   "author": "Jan Marek",
   "license": "MIT",
   "bugs": {
