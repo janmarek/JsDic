@@ -12,6 +12,17 @@ Features
 * circular dependency detection
 * works with browser, node.js and browserify
 
+Installation
+------------
+
+**npm**
+
+    npm install --save jsdic
+    
+**browser**
+
+Load file jsdic.js and use JsDic class.
+
 Example
 -------
 
@@ -27,7 +38,7 @@ function AjaxController(service, data) {
 	// ...
 }
 
-var JsDic = require('jsdic');
+var JsDic = require('jsdic'); // node, browserify
 var dic = new JsDic();
 dic
 	.value('ajaxUrl', '/some-ajax-action')
