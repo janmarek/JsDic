@@ -1,9 +1,16 @@
 JsDic
 =====
 
-Dependecy injection container for javascript inspired by AngularJS
+Dependecy injection container for javascript inspired by Angular.js
 
 License: MIT
+
+Features
+--------
+* value, service and factory definition in Angular.js style
+* like in Angular.js, dependencies can be defined by an array of names or parsed from function
+* circular dependency detection
+* works with browser, node.js and browserify
 
 Example
 -------
@@ -36,10 +43,10 @@ var ctrl = dic.get('ajaxController');
 dic
 	.value('ajaxUrl', '/some-ajax-action')
 	.value('initialData', [1, 2, 3])
-	.service('ajaxService', ['ajaxUrl'], AjaxService)
-	.factory('ajaxController', ['ajaxService', 'initialData'], function (as, id) {
+	.service('ajaxService', ['ajaxUrl', AjaxService])
+	.factory('ajaxController', ['ajaxService', 'initialData', function (as, id) {
 		return new AjaxController(as, id);
-	});
+	}]);
 ```
 
 Sources

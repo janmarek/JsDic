@@ -7,9 +7,53 @@
 	}
 
 	JsDic.prototype = {
-		get: function (name, history) {
-			history = history || [];
 
+		/**
+		 * Get service instance
+		 * @param {String} name
+		 * @return {*}
+		 */
+		get: function (name) {
+			return this.getWithHistory(name, []);
+		},
+
+		/**
+		 * Set value to container
+		 * @param {String} name
+		 * @param {*} value
+		 * @return {JsDic}
+		 */
+		value: function (name, value) {
+			this.values[name] = value;
+			return this;
+		},
+
+		/**
+		 * Set service factory to container
+		 * @param {String} name
+		 * @param {(Array|Function)} definition
+		 * @return {JsDic}
+		 */
+		factory: function (name, definition) {
+			this.factories[name] = this.parseDefinition(name, definition);
+			return this;
+		},
+
+		/**
+		 * Set service definition
+		 * @param {String} name
+		 * @param {(Array|Function)} definition
+		 * @return {JsDic}
+		 */
+		service: function (name, definition) {
+			this.services[name] = this.parseDefinition(name, definition);
+			return this;
+		},
+
+		/**
+		 * @private
+		 */
+		getWithHistory: function (name, history) {
 			for (var i = 0; i < history.length; i++) {
 				if (history[i] === name) {
 					throw 'Circular dependency detected: ' +
@@ -42,6 +86,9 @@
 			throw history.join(' <- ') + ' is not registered in container';
 		},
 
+		/**
+		* @private
+		*/
 		instantiateService: function (constructor, args) {
 			var wrapper = function (f, args) {
 				return function () {
@@ -52,6 +99,9 @@
 			return new (wrapper(constructor, args));
 		},
 
+		/**
+		* @private
+		*/
 		getArguments: function (target) {
 			var FN_ARGS = /^function\s*[^\(]*\(\s*([^\)]*)\)/m;
 			var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -69,50 +119,33 @@
 			return args;
 		},
 
+		/**
+		 * @private
+		 */
 		getDependencies: function (definition, history) {
 			var self = this;
 			var names = definition.dependencies || this.getArguments(definition.fnc);
 			return names.map(function (value) {
-				return self.get(value, history);
+				return self.getWithHistory(value, history);
 			});
 		},
 
-		value: function (name, dependency) {
-			this.values[name] = dependency;
-			return this;
-		},
-
-		factory: function (name, dependencies, fnc) {
-			if (typeof dependencies === 'function') {
-				fnc = dependencies;
-				dependencies = null;
-			} else if (dependencies.constructor !== Array) {
-				throw new Error(name + ': second argument should be an array of dependencies or factory function');
+		/**
+		 * @private
+		 */
+		parseDefinition: function (name, definition) {
+			if (definition.constructor === Array) {
+				var fnc = definition.pop();
+				return {fnc: fnc, dependencies: definition};
 			}
 
-			if (typeof fnc !== 'function') {
-				throw new Error(name + ' is not a function');
+			if (typeof definition === 'function') {
+				return {fnc: definition, dependencies: null};
 			}
 
-			this.factories[name] = {fnc: fnc, dependencies: dependencies};
-			return this;
-		},
-
-		service: function (name, dependencies, cls) {
-			if (typeof dependencies === 'function') {
-				cls = dependencies;
-				dependencies = null;
-			} else if (dependencies.constructor !== Array) {
-				throw new Error(name + ': second argument should be an array of dependencies or class constructor');
-			}
-
-			if (typeof cls !== 'function') {
-				throw new Error(name + ' is not a function');
-			}
-
-			this.services[name] = {fnc: cls, dependencies: dependencies};
-			return this;
+			throw new Error(name + ': second argument should be an array or function');
 		}
+
 	};
 
 	// export

@@ -82,9 +82,9 @@ describe('DIC', function () {
 		dic
 			.value('_a', 1)
 			.value('_b', 2)
-			.factory('factory', ['_a', '_b'], function (a, b) {
+			.factory('factory', ['_a', '_b', function (a, b) {
 				return a + b;
-			});
+			}]);
 
 		assert.equal(3, dic.get('factory'));
 	});
@@ -129,7 +129,7 @@ describe('DIC', function () {
 		dic
 			.value('_a', 1)
 			.value('_b', 2)
-			.service('cls', ['_a', '_b'], Cls);
+			.service('cls', ['_a', '_b', Cls]);
 
 		var obj = dic.get('cls');
 		assert.equal(1, obj.a);
@@ -187,20 +187,12 @@ describe('DIC', function () {
 	it('validates input for factory', function () {
 		assert.throws(function () {
 			dic.factory('a', 1);
-		}, /a: second argument should be an array of dependencies or factory function/);
-
-		assert.throws(function () {
-			dic.factory('a', ['deps'], 1);
-		}, /a is not a function/);
+		}, /a: second argument should be an array or function/);
 	});
 
 	it('validates input for service', function () {
 		assert.throws(function () {
 			dic.service('a', 1);
-		}, /a: second argument should be an array of dependencies or class constructor/);
-
-		assert.throws(function () {
-			dic.service('a', ['deps'], 1);
-		}, /a is not a function/);
+		}, /a: second argument should be an array or function/);
 	});
 });
