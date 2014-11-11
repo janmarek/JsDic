@@ -1,5 +1,5 @@
 var assert = require('assert');
-var JsDic = require('../JsDic');
+var JsDic = require('../jsdic');
 
 describe('DIC', function () {
 	var dic;

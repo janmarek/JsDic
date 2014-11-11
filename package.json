@@ -1,13 +1,10 @@
 {
   "name": "jsdic",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple dependecy injection container for javascript inspired by AngularJS",
   "main": "index.js",
   "directories": {
     "test": "tests"
-  },
-  "scripts": {
-    "test": "mocha tests/"
   },
   "repository": {
     "type": "git",
