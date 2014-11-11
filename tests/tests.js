@@ -50,6 +50,23 @@ describe('DIC', function () {
 		assert.equal(2, obj.b);
 	});
 
+	it('can instantiate service and handle this correctly', function () {
+		var ThisCls = function (a, b) {
+			this.init(a, b);
+		}
+
+		ThisCls.prototype.init = function (a, b) {
+			this.a = a;
+			this.b = b;
+		}
+
+		var obj = dic.instantiateService(ThisCls, [1, 2]);
+		assert.equal(1, obj.a);
+		assert.equal(2, obj.b);
+		assert.equal(ThisCls, obj.constructor);
+		assert.equal(ThisCls.prototype.init, obj.init);
+	});
+
 	it('handles values', function () {
 		dic
 			.value('a', 1)

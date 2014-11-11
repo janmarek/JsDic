@@ -90,13 +90,15 @@
 		* @private
 		*/
 		instantiateService: function (constructor, args) {
-			var wrapper = function (f, args) {
-				return function () {
-					f.apply(this, args);
+			var wrap = function (c) {
+				var wrapped = function (args) {
+					c.apply(this, args);
 				};
+				wrapped.prototype = c.prototype;
+				return wrapped;
 			};
 
-			return new (wrapper(constructor, args));
+			return new (wrap(constructor))(args);
 		},
 
 		/**
