@@ -25,6 +25,7 @@
 		 */
 		value: function (name, value) {
 			this.values[name] = value;
+			this.addProperty(name);
 			return this;
 		},
 
@@ -36,6 +37,7 @@
 		 */
 		factory: function (name, definition) {
 			this.factories[name] = this.parseDefinition(name, definition);
+			this.addProperty(name);
 			return this;
 		},
 
@@ -47,7 +49,22 @@
 		 */
 		service: function (name, definition) {
 			this.services[name] = this.parseDefinition(name, definition);
+			this.addProperty(name);
 			return this;
+		},
+
+		/**
+		 * @param {String} name
+		 */
+		addProperty: function (name) {
+			if (Object.defineProperty) {
+				var self = this;
+				Object.defineProperty(this, name, {
+    				get: function () {
+        				return self.get(name);
+    				}
+				});
+			}
 		},
 
 		/**

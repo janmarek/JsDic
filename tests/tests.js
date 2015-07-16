@@ -212,4 +212,20 @@ describe('DIC', function () {
 			dic.service('a', 1);
 		}, /a: second argument should be an array or function/);
 	});
+
+	it('has a shortcut for get', function () {
+		function C() {
+			this.value = 3;
+		}
+
+		dic.value('a', 1);
+		dic.factory('b', function () {
+			return 2;
+		});
+		dic.service('c', C);
+
+		assert.equal(dic.a, 1);
+		assert.equal(dic.b, 2);
+		assert.equal(dic.c.value, 3);
+	});
 });

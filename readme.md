@@ -18,7 +18,7 @@ Installation
 **npm**
 
     npm install --save jsdic
-    
+
 **browser**
 
 Load file jsdic.js and use JsDic class.
@@ -49,8 +49,12 @@ dic
 	});
 
 var ctrl = dic.get('ajaxController');
+// or
+var ctrl = dic.ajaxController;
+// or
+var ctrl = dic['ajaxController'];
 
-// dependecies can be defined explicitly
+// dependencies can be defined explicitly
 dic
 	.value('ajaxUrl', '/some-ajax-action')
 	.value('initialData', [1, 2, 3])

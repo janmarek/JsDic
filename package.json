@@ -1,6 +1,6 @@
 {
   "name": "jsdic",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Simple dependecy injection container for javascript inspired by AngularJS",
   "main": "index.js",
   "directories": {
