@@ -60,9 +60,9 @@
 			if (Object.defineProperty) {
 				var self = this;
 				Object.defineProperty(this, name, {
-    				get: function () {
-        				return self.get(name);
-    				}
+					get: function () {
+						return self.get(name);
+					}
 				});
 			}
 		},
@@ -107,15 +107,7 @@
 		* @private
 		*/
 		instantiateService: function (constructor, args) {
-			var wrap = function (c) {
-				var wrapped = function (args) {
-					c.apply(this, args);
-				};
-				wrapped.prototype = c.prototype;
-				return wrapped;
-			};
-
-			return new (wrap(constructor))(args);
+			return new (Function.prototype.bind.apply(constructor, [null].concat(args)));
 		},
 
 		/**
